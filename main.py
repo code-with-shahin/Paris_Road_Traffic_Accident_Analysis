@@ -167,3 +167,70 @@ users.to_csv(
     index=False,
     encoding="utf-8"
 )
+
+# ------------------------------------------------------------------------------------------
+# STEP 3. Summary Tables
+# ------------------------------------------------------------------------------------------
+
+# Load processed files
+
+import pandas as pd
+import os
+
+processed_path = r"D:\PycharmProjects\Paris_Road_Traffic_Analysis\datasets\processed"
+
+characteristics = pd.read_csv(
+    os.path.join(processed_path, "characteristics_2020_2024.csv"),
+    sep=";"
+)
+
+locations = pd.read_csv(
+    os.path.join(processed_path, "locations_2020_2024.csv"),
+    sep=";"
+)
+
+vehicles = pd.read_csv(
+    os.path.join(processed_path, "vehicles_2020_2024.csv"),
+    sep=";"
+)
+
+users = pd.read_csv(
+    os.path.join(processed_path, "users_2020_2024.csv"),
+    sep=";"
+)
+
+# Summary Tables for each dataset
+
+def create_summary(df):
+    summary = pd.DataFrame({
+        "Column Name": df.columns,
+        "Data Type": df.dtypes.values,
+        "Missing Values": df.isnull().sum().values,
+        "Missing %": df.isnull().mean().values * 100,
+        "Unique Values": df.nunique().values
+    })
+    return summary
+
+print("\n==================== CHARACTERISTICS ====================")
+characteristics_summary = create_summary(characteristics)
+print(characteristics_summary)
+
+print("\n==================== LOCATIONS ====================")
+locations_summary = create_summary(locations)
+print(locations_summary)
+
+print("\n==================== VEHICLES ====================")
+vehicles_summary = create_summary(vehicles)
+print(vehicles_summary)
+
+print("\n==================== USERS ====================")
+users_summary = create_summary(users)
+print(users_summary)
+
+# Shapes of Tables
+
+print("Characteristics shape:", characteristics.shape)
+print("Locations shape:", locations.shape)
+print("Vehicles shape:", vehicles.shape)
+print("Users shape:", users.shape)
+
