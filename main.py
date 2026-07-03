@@ -5,8 +5,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+
 # ---------------------------------------------------------------------------------------------
 # STEP 1. Import and Append Datasets
+# ---------------------------------------------------------------------------------------------
 
 # =========================
 # 1. CHARACTERISTICS
