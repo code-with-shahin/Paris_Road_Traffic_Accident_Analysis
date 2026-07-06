@@ -34,7 +34,6 @@ for year in range(2020, 2025):
 
 characteristics = pd.concat(characteristics_dfs, ignore_index=True)
 
-
 # =========================
 # 2. LOCATIONS (LIEUX)
 # =========================
@@ -80,7 +79,6 @@ for year in range(2020, 2025):
 
 vehicles = pd.concat(vehicle_dfs, ignore_index=True)
 
-
 # =========================
 # 4. USERS (USAGERS)
 # =========================
@@ -106,6 +104,14 @@ for year in range(2020, 2025):
 users = pd.concat(user_dfs, ignore_index=True)
 
 # Updating the data type for id_usager column:
+users['id_usager'] = (
+    users['id_usager']
+    .astype(str)
+    .str.replace(' ', '', regex=False)  # remove thousands-separator spaces
+    .str.replace('\xa0', '', regex=False)  # also handle non-breaking spaces, common in French exports
+    .str.strip()
+)
+
 users['id_usager'] = pd.to_numeric(users['id_usager'], errors='coerce').astype('Int64')
 
 # =========================
@@ -129,121 +135,8 @@ print(vehicles.head())
 print("\n==================== USERS ====================")
 print(users.head())
 
-
 # ------------------------------------------------------------------------------------------
-# STEP 2. Save all appended tables
-# ------------------------------------------------------------------------------------------
-
-output_path = r"D:\PycharmProjects\Paris_Road_Traffic_Analysis\datasets\processed"
-
-import os
-os.makedirs(output_path, exist_ok=True)
-
-# 1. Save CHARACTERISTICS
-
-characteristics.to_csv(
-    os.path.join(output_path, "characteristics.csv"),
-    sep=";",
-    index=False,
-    encoding="utf-8"
-)
-
-# 2. Save LOCATIONS
-
-locations.to_csv(
-    os.path.join(output_path, "locations.csv"),
-    sep=";",
-    index=False,
-    encoding="utf-8"
-)
-
-# 3. Save VEHICLES
-
-vehicles.to_csv(
-    os.path.join(output_path, "vehicles.csv"),
-    sep=";",
-    index=False,
-    encoding="utf-8"
-)
-
-# 4. Save USERS
-
-users.to_csv(
-    os.path.join(output_path, "users.csv"),
-    sep=";",
-    index=False,
-    encoding="utf-8"
-)
-
-# ------------------------------------------------------------------------------------------
-# STEP 3. Summary Tables
-# ------------------------------------------------------------------------------------------
-
-# Load processed files
-
-import pandas as pd
-import os
-
-processed_path = r"D:\PycharmProjects\Paris_Road_Traffic_Analysis\datasets\processed"
-
-characteristics = pd.read_csv(
-    os.path.join(processed_path, "characteristics.csv"),
-    sep=";"
-)
-
-locations = pd.read_csv(
-    os.path.join(processed_path, "locations.csv"),
-    sep=";"
-)
-
-vehicles = pd.read_csv(
-    os.path.join(processed_path, "vehicles.csv"),
-    sep=";"
-)
-
-users = pd.read_csv(
-    os.path.join(processed_path, "users.csv"),
-    sep=";"
-)
-
-# Summary Tables for each dataset
-
-def create_summary(df):
-    summary = pd.DataFrame({
-        "Column Name": df.columns,
-        "Data Type": df.dtypes.values,
-        "Missing Values": df.isnull().sum().values,
-        "Missing %": df.isnull().mean().values * 100,
-        "Unique Values": df.nunique().values
-    })
-    return summary
-
-print("\n==================== CHARACTERISTICS ====================")
-characteristics_summary = create_summary(characteristics)
-print(characteristics_summary)
-
-print("\n==================== LOCATIONS ====================")
-locations_summary = create_summary(locations)
-print(locations_summary)
-
-print("\n==================== VEHICLES ====================")
-vehicles_summary = create_summary(vehicles)
-print(vehicles_summary)
-
-print("\n==================== USERS ====================")
-users_summary = create_summary(users)
-print(users_summary)
-
-# Shapes of Tables
-
-print("Characteristics shape:", characteristics.shape)
-print("Locations shape:", locations.shape)
-print("Vehicles shape:", vehicles.shape)
-print("Users shape:", users.shape)
-
-
-# ------------------------------------------------------------------------------------------
-# STEP 4. Data Cleaning
+# STEP 2. Data Cleaning
 # ------------------------------------------------------------------------------------------
 
 # 1. Rename the columns for all datasets:
@@ -319,13 +212,6 @@ users = users.rename(columns={
     'actp': 'pedestrian_action',
     'etatp': 'pedestrian_presence'
 })
-
-# Drop "year" column from all datasets
-
-characteristics = characteristics.drop(columns=['year'])
-locations = locations.drop(columns=['year'])
-vehicles = vehicles.drop(columns=['year'])
-users = users.drop(columns=['year'])
 
 # Convert to a proper year format, keeping NaN as NaN (can't force int if missing values exist)
 users['birth_year_user'] = users['birth_year_user'].astype('Int64')  # capital "I" = pandas nullable integer type
@@ -567,29 +453,19 @@ locations['surface_condition'] = (
 )
 
 # infrastructure
-infrastructure_map = {
-    '-1': 'Not specified',
-    '0': 'None',
-    '1': 'Underground - tunnel',
-    '2': 'Bridge - flyover',
-    '3': 'Interchange or junction slip road',
-    '4': 'Railway line',
-    '5': 'Improved crossroads',
-    '6': 'Pedestrian zone',
-    '7': 'Toll area',
-    '8': 'Construction site',
-    '9': 'Other'
-}
-
-locations['infrastructure'] = (
-    locations['infrastructure']
-    .astype(str)
-    .str.strip()
-    .str.split('.').str[0]
-    .map(infrastructure_map)
-    .fillna('Unknown')
-    .astype('category')
-)
+locations["infrastructure"] = locations["infrastructure"].replace({
+    -1: "Not specified",
+     0: "No infrastructure",
+     1: "Underground - tunnel",
+     2: "Bridge - flyover",
+     3: "Interchange or junction slip road",
+     4: "Railway line",
+     5: "Improved crossroads",
+     6: "Pedestrian zone",
+     7: "Toll area",
+     8: "Construction site",
+     9: "Other"
+})
 
 # accident_location
 accident_location_map = {
@@ -1025,3 +901,127 @@ print(users.head(5))
 
 print("\n=== vehicles ===")
 print(vehicles.head(5))
+
+# 3. Drop redundant columns
+
+# Drop "year" column from all datasets
+characteristics = characteristics.drop(columns=['year'])
+locations = locations.drop(columns=['year'])
+vehicles = vehicles.drop(columns=['year'])
+users = users.drop(columns=['year'])
+
+# Drop unnecessary columns
+locations = locations.drop(columns=['road_number_index', 'road_alphanumeric_index', 'central_reservation_width'])
+vehicles = vehicles.drop(columns=['occupants_in_public_transport'])
+
+
+# ------------------------------------------------------------------------------------------
+# STEP 3. Save all appended tables
+# ------------------------------------------------------------------------------------------
+
+output_path = r"D:\PycharmProjects\Paris_Road_Traffic_Analysis\datasets\processed"
+
+import os
+os.makedirs(output_path, exist_ok=True)
+
+# 1. Save CHARACTERISTICS
+
+characteristics.to_csv(
+    os.path.join(output_path, "characteristics.csv"),
+    sep=";",
+    index=False,
+    encoding="utf-8"
+)
+
+# 2. Save LOCATIONS
+
+locations.to_csv(
+    os.path.join(output_path, "locations.csv"),
+    sep=";",
+    index=False,
+    encoding="utf-8"
+)
+
+# 3. Save VEHICLES
+
+vehicles.to_csv(
+    os.path.join(output_path, "vehicles.csv"),
+    sep=";",
+    index=False,
+    encoding="utf-8"
+)
+
+# 4. Save USERS
+
+users.to_csv(
+    os.path.join(output_path, "users.csv"),
+    sep=";",
+    index=False,
+    encoding="utf-8"
+)
+
+# ------------------------------------------------------------------------------------------
+# STEP 4. Summary Tables
+# ------------------------------------------------------------------------------------------
+
+# Load processed files
+
+import pandas as pd
+import os
+
+processed_path = r"D:\PycharmProjects\Paris_Road_Traffic_Analysis\datasets\processed"
+
+characteristics = pd.read_csv(
+    os.path.join(processed_path, "characteristics.csv"),
+    sep=";"
+)
+
+locations = pd.read_csv(
+    os.path.join(processed_path, "locations.csv"),
+    sep=";"
+)
+
+vehicles = pd.read_csv(
+    os.path.join(processed_path, "vehicles.csv"),
+    sep=";"
+)
+
+users = pd.read_csv(
+    os.path.join(processed_path, "users.csv"),
+    sep=";"
+)
+
+# Summary Tables for each dataset
+
+def create_summary(df):
+    summary = pd.DataFrame({
+        "Column Name": df.columns,
+        "Data Type": df.dtypes.values,
+        "Missing Values": df.isnull().sum().values,
+        "Missing %": df.isnull().mean().values * 100,
+        "Unique Values": df.nunique().values
+    })
+    return summary
+
+print("\n==================== CHARACTERISTICS ====================")
+characteristics_summary = create_summary(characteristics)
+print(characteristics_summary)
+
+print("\n==================== LOCATIONS ====================")
+locations_summary = create_summary(locations)
+print(locations_summary)
+
+print("\n==================== VEHICLES ====================")
+vehicles_summary = create_summary(vehicles)
+print(vehicles_summary)
+
+print("\n==================== USERS ====================")
+users_summary = create_summary(users)
+print(users_summary)
+
+# Shapes of Tables
+
+print("Characteristics shape:", characteristics.shape)
+print("Locations shape:", locations.shape)
+print("Vehicles shape:", vehicles.shape)
+print("Users shape:", users.shape)

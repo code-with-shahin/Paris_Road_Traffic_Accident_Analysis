@@ -7,6 +7,10 @@
     <list default="true" id="258664b4-2f5f-4d13-b134-815a1733bde3" name="Changes" comment="data cleaning">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Paris_traffic_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/Paris_traffic_analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/processed/characteristics.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/processed/characteristics.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/processed/locations.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/processed/locations.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/processed/users.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/processed/users.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/processed/vehicles.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/processed/vehicles.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,23 +42,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000237088347" />
-      <entry key="MS500" value="1.030477073045172" />
-      <entry key="S2" value="1.8246472558127784" />
-      <entry key="S5" value="3.467346709281758" />
-      <entry key="S10" value="4.784325873490976" />
-      <entry key="S30" value="6.126461564557434" />
-      <entry key="S60" value="6.550334223469934" />
-      <entry key="M2" value="6.893570681486573" />
-      <entry key="M5" value="8.711064495683615" />
-      <entry key="M10" value="14.186069007090516" />
-      <entry key="M15" value="19.142432137098165" />
-      <entry key="M30" value="29.893635346230397" />
-      <entry key="H1" value="47.11904342789504" />
-      <entry key="H2" value="73.9337290502687" />
-      <entry key="H4" value="103.20772951743815" />
-      <entry key="D1" value="146.1842318062718" />
-      <entry key="W1" value="156.22924226087287" />
+      <entry key="MS100" value="1.0000000000112337" />
+      <entry key="MS500" value="1.0198697531027354" />
+      <entry key="S2" value="3.917104505420813" />
+      <entry key="S5" value="13.246435917493496" />
+      <entry key="S10" value="24.376072044726392" />
+      <entry key="S30" value="40.074614327666126" />
+      <entry key="S60" value="45.964086398484675" />
+      <entry key="M2" value="49.323930343371934" />
+      <entry key="M5" value="51.532343601821495" />
+      <entry key="M10" value="53.14302592840638" />
+      <entry key="M15" value="55.39584772229049" />
+      <entry key="M30" value="64.66215153141391" />
+      <entry key="H1" value="84.22315368408944" />
+      <entry key="H2" value="116.39835926732769" />
+      <entry key="H4" value="154.4924242222756" />
+      <entry key="D1" value="216.02594133053321" />
+      <entry key="W1" value="231.2792973570701" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -76,23 +80,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.7120251157664726" />
-      <entry key="MS500" value="0.9631696659583319" />
-      <entry key="S2" value="1.7975278212047436" />
-      <entry key="S5" value="3.4482258519275826" />
-      <entry key="S10" value="4.7713208437343235" />
-      <entry key="S30" value="6.120925174847082" />
-      <entry key="S60" value="6.547281175659707" />
-      <entry key="M2" value="6.89121636856958" />
-      <entry key="M5" value="8.708601214716984" />
-      <entry key="M10" value="14.184087235209585" />
-      <entry key="M15" value="19.140830733683526" />
-      <entry key="M30" value="29.89247246677315" />
-      <entry key="H1" value="47.11802773602616" />
-      <entry key="H2" value="73.93286617993401" />
-      <entry key="H4" value="103.20711102545243" />
-      <entry key="D1" value="146.18408439214164" />
-      <entry key="W1" value="156.22921974450887" />
+      <entry key="MS100" value="2.0042623988140478E-11" />
+      <entry key="MS500" value="0.025919204324375274" />
+      <entry key="S2" value="3.1907339558604373" />
+      <entry key="S5" value="12.835439630636372" />
+      <entry key="S10" value="24.139586343322986" />
+      <entry key="S30" value="39.986665679335644" />
+      <entry key="S60" value="45.918748600648605" />
+      <entry key="M2" value="49.30089855980139" />
+      <entry key="M5" value="51.5230343412234" />
+      <entry key="M10" value="53.13825152490209" />
+      <entry key="M15" value="55.39247988993527" />
+      <entry key="M30" value="64.66006394242642" />
+      <entry key="H1" value="84.22165877909575" />
+      <entry key="H2" value="116.39721543576123" />
+      <entry key="H4" value="154.4916157517876" />
+      <entry key="D1" value="216.02574361280483" />
+      <entry key="W1" value="231.27926690066303" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -131,6 +135,37 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\PycharmProjects\Paris_Road_Traffic_Analysis" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Paris_traffic_analysis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Paris_Road_Traffic_Analysis" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Paris_traffic_analysis.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.Paris_traffic_analysis" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -211,7 +246,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783326743685</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="data cleaning">
+      <option name="closed" value="true" />
+      <created>1783347979794</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1783347979794</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
