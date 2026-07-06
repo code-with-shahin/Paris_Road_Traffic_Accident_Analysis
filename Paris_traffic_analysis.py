@@ -56,6 +56,8 @@ for year in range(2020, 2025):
 
 locations = pd.concat(location_dfs, ignore_index=True)
 
+# Updating the data type for nbv column:
+locations['nbv'] = pd.to_numeric(locations['nbv'], errors='coerce').astype('Int64')
 
 # =========================
 # 3. VEHICLES (VEHICULES)
@@ -103,6 +105,8 @@ for year in range(2020, 2025):
 
 users = pd.concat(user_dfs, ignore_index=True)
 
+# Updating the data type for id_usager column:
+users['id_usager'] = pd.to_numeric(users['id_usager'], errors='coerce').astype('Int64')
 
 # =========================
 # QUICK CHECKS
@@ -124,6 +128,7 @@ print(vehicles.head())
 
 print("\n==================== USERS ====================")
 print(users.head())
+
 
 # ------------------------------------------------------------------------------------------
 # STEP 2. Save all appended tables
@@ -284,8 +289,8 @@ locations = locations.rename(columns={
 
 vehicles = vehicles.rename(columns={
     'Num_Acc': 'accident_id',
-    'id_vehicle': 'vehicle_id',
-    'Num_Veh': 'vehicle_code',
+    'id_vehicule': 'vehicle_id',
+    'num_veh': 'vehicle_code',
     'senc': 'travel_direction',
     'catv': 'vehicle_category',
     'obs': 'fixed_obstacle_struck',
@@ -305,7 +310,7 @@ users = users.rename(columns={
     'catu': 'user_category',
     'grav': 'injury_severity',
     'sexe': 'gender',
-    'An_nais': 'birth_year_user',
+    'an_nais': 'birth_year_user',
     'trajet': 'travel_reason',
     'secu1': 'safety_equipment1',
     'secu2': 'safety_equipment2',
@@ -321,6 +326,9 @@ characteristics = characteristics.drop(columns=['year'])
 locations = locations.drop(columns=['year'])
 vehicles = vehicles.drop(columns=['year'])
 users = users.drop(columns=['year'])
+
+# Convert to a proper year format, keeping NaN as NaN (can't force int if missing values exist)
+users['birth_year_user'] = users['birth_year_user'].astype('Int64')  # capital "I" = pandas nullable integer type
 
 # Check the column names:
 
@@ -436,6 +444,7 @@ characteristics['collision_type'] = (
 
 # 2.2 Update "Locations" Dataframe
 
+# road_category
 road_category_map = {
     '1': 'Motorway',
     '2': 'National road',
@@ -457,6 +466,7 @@ locations['road_category'] = (
     .astype('category')
 )
 
+# traffic_regime
 traffic_regime_map = {
     '-1': 'Not specified',
     '1': 'One-way',
@@ -475,6 +485,7 @@ locations['traffic_regime'] = (
     .astype('category')
 )
 
+# reserved_lane_type
 reserved_lane_type_map = {
     '-1': 'Not specified',
     '0': 'Not applicable',
@@ -493,6 +504,7 @@ locations['reserved_lane_type'] = (
     .astype('category')
 )
 
+# road_profile
 road_profile_map = {
     '-1': 'Not specified',
     '1': 'Flat',
@@ -511,6 +523,7 @@ locations['road_profile'] = (
     .astype('category')
 )
 
+# plan_layout
 plan_layout_map = {
     '-1': 'Not specified',
     '1': 'Straight section',
@@ -529,6 +542,7 @@ locations['plan_layout'] = (
     .astype('category')
 )
 
+# surface_condition
 surface_condition_map = {
     '-1': 'Not specified',
     '1': 'Normal',
@@ -552,6 +566,7 @@ locations['surface_condition'] = (
     .astype('category')
 )
 
+# infrastructure
 infrastructure_map = {
     '-1': 'Not specified',
     '0': 'None',
@@ -576,6 +591,7 @@ locations['infrastructure'] = (
     .astype('category')
 )
 
+# accident_location
 accident_location_map = {
     '-1': 'Not specified',
     '0': 'None',
@@ -598,33 +614,414 @@ locations['accident_location'] = (
     .astype('category')
 )
 
+# 2.3 Update "Vehicles" Dataframe
+
+# travel_direction
+travel_direction_map = {
+    '-1': 'Not specified',
+    '0': 'Unknown',
+    '1': 'PK or PR or ascending postal address number',
+    '2': 'PK or PR or descending postal address number',
+    '3': 'No reference point'
+}
+
+vehicles['travel_direction'] = (
+    vehicles['travel_direction']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(travel_direction_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# vehicle_category
+vehicle_category_map = {
+    '00': 'Indeterminable',
+    '01': 'Bicycle',
+    '02': 'Moped',
+    '03': 'Microcar',
+    '07': 'Light vehicle',
+    '10': 'Light commercial vehicle',
+    '13': 'HGV 3.5T < GVW <= 7.5T',
+    '14': 'HGV > 7.5T',
+    '15': 'HGV > 3.5T + trailer',
+    '16': 'Road tractor',
+    '17': 'Road tractor + semi-trailer',
+    '20': 'Special vehicle',
+    '21': 'Agricultural tractor',
+    '30': 'Scooter < 50 cm3',
+    '31': 'Motorcycle > 50 cm³ and ≤ 125 cm³',
+    '32': 'Scooter > 50 cm3 and ≤ 125 cm3',
+    '33': 'Motorcycle > 125 cc',
+    '34': 'Scooter > 125 cc',
+    '35': 'Light quad bike',
+    '36': 'Heavy quad bike',
+    '37': 'Bus',
+    '38': 'Coach',
+    '39': 'Train',
+    '40': 'Tram',
+    '41': '3RM ≤ 50 cm³',
+    '42': '3RM > 50 cm³ ≤ 125 cm³',
+    '43': '3-wheel motorcycles > 125 cm3',
+    '50': 'Motorised EDP',
+    '60': 'EDP without motor',
+    '80': 'EAB',
+    '99': 'Other vehicle'
+}
+
+vehicles['vehicle_category'] = (
+    vehicles['vehicle_category']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .str.zfill(2)                 # restores leading zero, e.g. '0' -> '00', '1' -> '01'
+    .map(vehicle_category_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# fixed_obstacle_struck
+fixed_obstacle_struck_map = {
+    '-1': 'Not specified',
+    '0': 'Not applicable',
+    '1': 'Parked vehicle',
+    '2': 'Tree',
+    '3': 'Metal guardrail',
+    '4': 'Concrete barrier',
+    '5': 'Other barrier',
+    '6': 'Building, wall, bridge pier',
+    '7': 'Vertical signage support or emergency call station',
+    '8': 'Pole',
+    '9': 'Street furniture',
+    '10': 'Parapet',
+    '11': 'Island, refuge, high bollard',
+    '12': 'Kerbs',
+    '13': 'Ditch, embankment, rock face',
+    '14': 'Other fixed obstacle on the carriageway',
+    '15': 'Other fixed obstacle on pavement or verge',
+    '16': 'Road exit without obstacle',
+    '17': 'Culvert – aqueduct head'
+}
+
+vehicles['fixed_obstacle_struck'] = (
+    vehicles['fixed_obstacle_struck']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(fixed_obstacle_struck_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# mobile_obstacle_struck
+mobile_obstacle_struck_map = {
+    '-1': 'Not specified',
+    '0': 'None',
+    '1': 'Pedestrian',
+    '2': 'Vehicle',
+    '4': 'Rail vehicle',
+    '5': 'Domestic animal',
+    '6': 'Wild animal',
+    '9': 'Other'
+}
+
+vehicles['mobile_obstacle_struck'] = (
+    vehicles['mobile_obstacle_struck']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(mobile_obstacle_struck_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# initial_impact_point
+initial_impact_point_map = {
+    '-1': 'Not specified',
+    '0': 'None',
+    '1': 'Before',
+    '2': 'Right forward',
+    '3': 'Front left',
+    '4': 'Rear',
+    '5': 'Rear right',
+    '6': 'Rear left',
+    '7': 'Right side',
+    '8': 'Left side',
+    '9': 'Multiple impacts (rollovers)'
+}
+
+vehicles['initial_impact_point'] = (
+    vehicles['initial_impact_point']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(initial_impact_point_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# main_manoeuvre_before_the_accident
+main_manoeuvre_map = {
+    '-1': 'Not specified',
+    '0': 'Unknown',
+    '1': 'No change in direction',
+    '2': 'Same direction, same lane',
+    '3': 'Between two lanes',
+    '4': 'Reversing',
+    '5': 'Wrong way',
+    '6': 'Crossing the central reservation',
+    '7': 'In the bus lane, in the same direction',
+    '8': 'In the bus lane, in the opposite direction',
+    '9': 'By turning around',
+    '10': 'By turning around on the road',
+    '11': 'Changing lanes to the left',
+    '12': 'Changing lanes to the right',
+    '13': 'Offset to the left',
+    '14': 'Offset to the right',
+    '15': 'Turning to the left',
+    '16': 'Turning to the right',
+    '17': 'Overtaking left',
+    '18': 'Overtaking right',
+    '19': 'Crossing the road',
+    '20': 'Parking manoeuvre',
+    '21': 'Evasive manoeuvre',
+    '22': 'Opening the door',
+    '23': 'Stopping (outside of parking)',
+    '24': 'Parking (with occupants)',
+    '25': 'Driving on the pavement',
+    '26': 'Other manoeuvres'
+}
+
+vehicles['main_manoeuvre_before_the_accident'] = (
+    vehicles['main_manoeuvre_before_the_accident']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(main_manoeuvre_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# vehicle_engine_type
+vehicle_engine_type_map = {
+    '-1': 'Not specified',
+    '0': 'Unknown',
+    '1': 'Hydrocarbons',
+    '2': 'Electric hybrid',
+    '3': 'Electric',
+    '4': 'Hydrogen',
+    '5': 'Human',
+    '6': 'Other'
+}
+
+vehicles['vehicle_engine_type'] = (
+    vehicles['vehicle_engine_type']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(vehicle_engine_type_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# 2.4 Update "Users" Dataframe
+
+# seat_place
+users['seat_place'] = (
+    users['seat_place']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .replace({'10': 'Pedestrian'})
+)
+
+# user_category
+user_category_map = {
+    '1': 'Driver',
+    '2': 'Passenger',
+    '3': 'Pedestrian'
+}
+
+users['user_category'] = (
+    users['user_category']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(user_category_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# injury_severity
+injury_severity_map = {
+    '1': 'Uninjured',
+    '2': 'Killed',
+    '3': 'Hospitalised',
+    '4': 'Slightly injured'
+}
+
+users['injury_severity'] = (
+    users['injury_severity']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(injury_severity_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# gender
+gender_map = {
+    '1': 'Male',
+    '2': 'Feminine'
+}
+
+users['gender'] = (
+    users['gender']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(gender_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# travel_reason
+travel_reason_map = {
+    '-1': 'Not specified',
+    '0': 'Not specified',
+    '1': 'Home – work',
+    '2': 'Home – school',
+    '3': 'Shopping – purchases',
+    '4': 'Professional use',
+    '5': 'Walking – leisure',
+    '9': 'Other'
+}
+
+users['travel_reason'] = (
+    users['travel_reason']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(travel_reason_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# safety_equipment
+safety_equipment_map = {
+    '-1': 'Not specified',
+    '0': 'No equipment',
+    '1': 'Seatbelt',
+    '2': 'Helmet',
+    '3': 'Child restraint',
+    '4': 'Reflective vest',
+    '5': 'Airbag (2-wheel/3-wheel)',
+    '6': 'Gloves (2-wheel/3-wheel)',
+    '7': 'Gloves + airbag (2-wheel/3-wheel)',
+    '8': 'Not determinable',
+    '9': 'Other'
+}
+
+for col in ['safety_equipment1', 'safety_equipment2', 'safety_equipment3']:
+    users[col] = (
+        users[col]
+        .astype(str)
+        .str.strip()
+        .str.split('.').str[0]
+        .map(safety_equipment_map)
+        .fillna('Unknown')
+        .astype('category')
+    )
+
+# pedestrian_location
+pedestrian_location_map = {
+    '-1': 'Not specified',
+    '0': 'Not applicable',
+    '1': 'More than 50 metres from the pedestrian crossing',
+    '2': 'Less than 50 metres from the pedestrian crossing',
+    '3': 'Pedestrian crossing without traffic lights',
+    '4': 'Pedestrian crossing with traffic lights',
+    '5': 'On the pavement',
+    '6': 'On the hard shoulder',
+    '7': 'On refuge or BAU',
+    '8': 'On the side lane',
+    '9': 'Unknown'
+}
+
+users['pedestrian_location'] = (
+    users['pedestrian_location']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(pedestrian_location_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# pedestrian_action
+pedestrian_action_map = {
+    '-1': 'Not specified',
+    '0': 'Not specified or not applicable',
+    '1': 'Moving to the direction of vehicle impact',
+    '2': 'Moving to the opposite direction to vehicle',
+    '3': 'Crossing',
+    '4': 'Hidden',
+    '5': 'Playing – Running',
+    '6': 'With animal',
+    '9': 'Other',
+    'A': 'Gets in/out of the vehicle',
+    'B': 'Unknown'
+}
+
+users['pedestrian_action'] = (
+    users['pedestrian_action']
+    .astype(str)
+    .str.strip()
+    .str.upper()                    # normalizes 'a'/'b' to 'A'/'B' in case of inconsistent casing
+    .str.split('.').str[0]
+    .map(pedestrian_action_map)
+    .fillna('Unknown')
+    .astype('category')
+)
+
+# pedestrian_presence
+pedestrian_presence_map = {
+    '-1': 'Not specified',
+    '1': 'Alone',
+    '2': 'Accompanied',
+    '3': 'In a group'
+}
+
+users['pedestrian_presence'] = (
+    users['pedestrian_presence']
+    .astype(str)
+    .str.strip()
+    .str.split('.').str[0]
+    .map(pedestrian_presence_map)
+    .fillna('Unknown')
+    .astype('category')
+)
 
 
-# Checking the updated columns
-
-print(characteristics['lighting_conditions'].value_counts(dropna=False))
-print(characteristics['location'].value_counts(dropna=False))
-print(characteristics['intersection'].value_counts(dropna=False))
-print(characteristics['atmospheric_conditions'].value_counts(dropna=False))
-print(characteristics['collision_type'].value_counts(dropna=False))
-print(locations['road_category'].value_counts(dropna=False))
-print(locations['traffic_regime'].value_counts(dropna=False))
-print(locations['reserved_lane_type'].value_counts(dropna=False))
-print(locations['road_profile'].value_counts(dropna=False))
-print(locations['plan_layout'].value_counts(dropna=False))
-print(locations['surface_condition'].value_counts(dropna=False))
-print(locations['infrastructure'].value_counts(dropna=False))
-print(locations['accident_location'].value_counts(dropna=False))
-
-
-
+# Stop pandas from truncating/wrapping columns in the console output:
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 0)      # 0 tells pandas to detect terminal width, but often works better than None for wrapping issues
 pd.set_option('display.expand_frame_repr', False)  # this is the key one — stops line wrapping entirely
+
+
+# Verify the dataframes
 
 print("=== characteristics ===")
 print(characteristics.head(5))
 
 print("\n=== locations ===")
 print(locations.head(5))
+
+print("\n=== users ===")
+print(users.head(5))
+
+print("\n=== vehicles ===")
+print(vehicles.head(5))
