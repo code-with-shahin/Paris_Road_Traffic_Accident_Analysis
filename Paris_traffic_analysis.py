@@ -15,7 +15,7 @@ import seaborn as sns
 
 characteristics_dfs = []
 
-for year in range(2020, 2025):
+for year in range(2021, 2025):
     file = f"datasets/caracteristiques-{year}.csv"
 
     df = pd.read_csv(file, sep=";", engine="python")
@@ -39,7 +39,7 @@ characteristics = pd.concat(characteristics_dfs, ignore_index=True)
 
 location_dfs = []
 
-for year in range(2020, 2025):
+for year in range(2021, 2025):
     file = f"datasets/lieux-{year}.csv"
 
     df = pd.read_csv(file, sep=";", engine="python")
@@ -63,7 +63,7 @@ locations['nbv'] = pd.to_numeric(locations['nbv'], errors='coerce').astype('Int6
 
 vehicle_dfs = []
 
-for year in range(2020, 2025):
+for year in range(2021, 2025):
     file = f"datasets/vehicules-{year}.csv"
 
     df = pd.read_csv(file, sep=";", engine="python")
@@ -84,7 +84,7 @@ vehicles = pd.concat(vehicle_dfs, ignore_index=True)
 
 user_dfs = []
 
-for year in range(2020, 2025):
+for year in range(2021, 2025):
     file = f"datasets/usagers-{year}.csv"
 
     df = pd.read_csv(file, sep=";", engine="python")
@@ -1019,3 +1019,8 @@ print(users.head(5))
 print("\n=== vehicles ===")
 print(vehicles.head(5))
 
+# Individual .columns for each dataframe
+print("Characteristics:", characteristics.columns.tolist())
+print("Locations:", locations.columns.tolist())
+print("Users:", users.columns.tolist())
+print("Vehicles:", vehicles.columns.tolist())
