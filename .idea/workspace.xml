@@ -137,7 +137,7 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="Paris_traffic_analysis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="France_traffic_analysis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Paris_Road_Traffic_Analysis" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -152,7 +152,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="DEBUG_JUST_MY_CODE" value="false" />
       <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Paris_traffic_analysis.py" />
+      <option name="SCRIPT_NAME" value="D:\PycharmProjects\Paris_Road_Traffic_Analysis\France_traffic_analysis.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -163,7 +163,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Paris_traffic_analysis" />
+        <item itemvalue="Python.France_traffic_analysis" />
       </list>
     </recent_temporary>
   </component>
@@ -278,7 +278,23 @@
       <option name="project" value="LOCAL" />
       <updated>1783499450764</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="data cleaning">
+      <option name="closed" value="true" />
+      <created>1784137568891</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1784137568891</updated>
+    </task>
+    <task id="LOCAL-00014" summary="data cleaning">
+      <option name="closed" value="true" />
+      <created>1784137597200</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1784137597200</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
