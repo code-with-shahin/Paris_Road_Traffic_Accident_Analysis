@@ -1,4 +1,4 @@
-# 🇫🇷 France Road Traffic Accident Analysis (2021–2024)
+# France Road Traffic Accident Analysis (2021–2024)
 
 ## 📌 Project Overview
 
