@@ -46,20 +46,21 @@ A **Star Schema** was implemented to improve performance and simplify reporting.
 
 ### Fact Table
 
-- Fact_Accidents
+- Fact_Users
 
 ### Dimension Tables
 
 - Dim_Date
-- Dim_User
-- Dim_Vehicle
-- Dim_Location
+- Dim_Vehicles
+- Dim_Locations
 - Dim_Weather
 
 ---
 
 ## 🛠 Tools & Technologies
 
+- Python (PyCharm)
+- SQL (MySQL)
 - Microsoft Power BI Desktop
 - Power Query
 - DAX
@@ -137,15 +138,16 @@ Data preprocessing included:
 
 ## 📐 DAX Measures
 
-
 - Total Accidents
-- Total Users
+- Total Users Involved
+- Total Vehicles Involved
 - Average Age
 - Fatal Accident Count
 - Serious Injury Count
 - Accident Rate
 - Year-over-Year Growth
 - Percentage of Severe Accidents
+- Accidents per 1000 Users
 
 ---
 
