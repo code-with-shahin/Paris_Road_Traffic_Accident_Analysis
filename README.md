@@ -153,6 +153,7 @@ Data preprocessing included:
 
 ## 📷 Dashboard Preview
 
+<img width="1364" height="789" alt="2026-07-20 22_54_23-France" src="https://github.com/user-attachments/assets/555e1477-7979-4287-832a-af0fa4ec27d1" />
 
 ---
 
